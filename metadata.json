@@ -1,0 +1,7 @@
+{
+  "name": "Copy of AI Fit - Nano Banana Style",
+  "description": "A virtual try-on application using Gemini Nano Banana capabilities.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}
