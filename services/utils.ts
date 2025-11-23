@@ -1,6 +1,14 @@
 export const urlToBase64 = async (url: string): Promise<string> => {
+  // If it's already a data URL, just return it
+  if (url.startsWith('data:')) {
+    return url;
+  }
+
   try {
     const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error(`Failed to fetch image: ${response.status} ${response.statusText}`);
+    }
     const blob = await response.blob();
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
@@ -10,12 +18,13 @@ export const urlToBase64 = async (url: string): Promise<string> => {
         const base64Data = base64String.split(',')[1];
         resolve(base64Data);
       };
-      reader.onerror = reject;
+      reader.onerror = () => reject(new Error("FileReader failed to read image blob"));
       reader.readAsDataURL(blob);
     });
   } catch (error) {
-    console.error("Error converting URL to base64", error);
-    throw new Error("Failed to process image.");
+    console.error("Error converting URL to base64:", url, error);
+    // Propagate the error so the UI can handle it (likely CORS)
+    throw error;
   }
 };
 

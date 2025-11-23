@@ -150,8 +150,16 @@ const App: React.FC = () => {
       const updatedHistory = [newItem, ...history];
       setHistory(updatedHistory);
       localStorage.setItem('tryon_history', JSON.stringify(updatedHistory.slice(0, 50))); // Keep last 50
-    } catch (error) {
-      alert("生成失败，请重试。确保您的 API Key 正确且有 Nano Banana 权限。");
+    } catch (error: any) {
+      console.error("Full Error:", error);
+      let msg = "生成失败，请重试。";
+      if (error.message) {
+        msg += ` 错误信息: ${error.message}`;
+      }
+      if (error.toString().includes('Failed to fetch')) {
+          msg = "网络请求失败。可能是跨域(CORS)问题导致无法下载预设图片，请尝试上传您自己的本地图片。";
+      }
+      alert(msg);
     } finally {
       setLoading('idle');
     }
