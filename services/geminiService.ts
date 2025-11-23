@@ -2,6 +2,13 @@ import { GoogleGenAI } from "@google/genai";
 import { MODEL_NAME } from "../constants";
 import { stripBase64Prefix, urlToBase64 } from "./utils";
 
+// Manual declaration to satisfy TypeScript since @types/node is not available
+declare const process: {
+  env: {
+    API_KEY: string;
+  };
+};
+
 const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
 
 export const generateClothingImage = async (prompt: string): Promise<string> => {
